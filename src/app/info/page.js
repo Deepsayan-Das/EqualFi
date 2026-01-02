@@ -1,6 +1,8 @@
 'use client'
 import React, { useState } from 'react'
 import { Sparkles, ShieldCheck, Wallet, Landmark, Activity, AlertCircle, ChevronDown } from 'lucide-react'
+import { CustomScrollbar } from '@/components/ui/CustomScrollbar';
+import { useLenis } from '@/hooks/useLenis';
 
 const Info = ({ onEvaluate }) => {
   const [isOpen, setIsOpen] = useState({ persona: false, consistency: false });
@@ -24,12 +26,14 @@ const Info = ({ onEvaluate }) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setIsOpen(prev => ({ ...prev, [field]: false }));
   };
-
+    useLenis();
   return (
     <div className="min-h-screen bg-[#020617] text-white p-4 lg:p-12 relative overflow-hidden 
       before:absolute before:inset-0 
       before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] 
       before:bg-[size:40px_40px] before:opacity-40 before:pointer-events-none">
+        <CustomScrollbar/>
+        <CustomScrollbar/>
       
       <div className="max-w-2xl mx-auto relative z-10">
         <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 lg:p-10">

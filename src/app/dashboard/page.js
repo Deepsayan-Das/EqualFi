@@ -2,6 +2,9 @@
 import React, { useState } from 'react'
 import GaugeComponent from 'react-gauge-component'
 import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCircle, ShieldCheck, ArrowUpRight, ExternalLink, AlertTriangle, Cpu } from 'lucide-react'
+import { CursorFollower } from '@/components/ui/CustomCursor'
+import { CustomScrollbar } from '@/components/ui/CustomScrollbar'
+import { useLenis } from '@/hooks/useLenis'
 
 function Dashboard() {
   const [creditScore, setCreditScore] = useState(0)
@@ -39,10 +42,12 @@ function Dashboard() {
       setCreditScore(userData.creditScore)
     }, 3000)
   }
-
+useLenis();
   return (
+    
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 lg:p-12 relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-[size:40px_40px] before:opacity-40 before:pointer-events-none">
-      
+       <CustomScrollbar />
+      <CursorFollower />
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 relative z-10">
         <div className="flex items-center justify-between mb-2">
