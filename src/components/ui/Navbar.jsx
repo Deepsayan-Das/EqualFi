@@ -10,7 +10,7 @@ export const zalandoExpanded = Zalando_Sans_Expanded({
 })
 function Navbar() {
   return (
-    <div className='w-full h-20  absolute top-0 left-0 z-50'>
+    <div className='w-full h-16  absolute top-0 left-0 z-50'>
         <ul className={`
            ${zalandoExpanded.className} h-full w-full flex items-center justify-evenly uppercase text-sm text-[#f2f4f8]`
             }>

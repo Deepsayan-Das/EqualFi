@@ -1,10 +1,12 @@
 'use client'
 import AboutUs from "@/components/AboutUs";
+import LoginSignupPage from "@/components/Auth";
 import FeaturesSection from "@/components/Features";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/Howitworks";
 import { CursorFollower } from "@/components/ui/CustomCursor";
 import { CustomScrollbar } from "@/components/ui/CustomScrollbar";
+import Navbar from "@/components/ui/Navbar";
 import { useLenis } from "@/hooks/useLenis";
 import Image from "next/image";
 
@@ -14,10 +16,12 @@ export default function Home() {
     <div className="flex flex-col min-h-screen items-center justify-center bg-[#f2f4f8]">
       <CustomScrollbar />
       <CursorFollower />
+      <Navbar/>
       <Hero/>
       <AboutUs/>
       <HowItWorks/>
       <FeaturesSection/>
+      
     </div>
   );
 }
