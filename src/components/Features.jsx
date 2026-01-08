@@ -7,6 +7,7 @@ function FeaturesSection() {
   const [activeFeature, setActiveFeature] = useState(null)
   const [hoveredFeature, setHoveredFeature] = useState(null)
   const [rotation, setRotation] = useState(0)
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,20 +35,40 @@ function FeaturesSection() {
     }
   }
 
-  const isActive = activeFeature !== null
-  const radius = 180
+const isActive = activeFeature !== null
+  
+  // Responsive radius based on screen size
+  const [radius, setRadius] = useState(180)
+  
+  useEffect(() => {
+    const updateRadius = () => {
+      if (window.innerWidth < 640) {
+        setRadius(120) // Small mobile
+      } else if (window.innerWidth < 768) {
+        setRadius(150) // Large mobile
+      } else if (window.innerWidth < 1024) {
+        setRadius(180) // Tablet
+      } else {
+        setRadius(200) // Desktop
+      }
+    }
+    
+    updateRadius()
+    window.addEventListener('resize', updateRadius)
+    return () => window.removeEventListener('resize', updateRadius)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-[#f2f4f8] py-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative w-full">
+    <div className="min-h-screen bg-[#f2f4f8] py-12 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative w-full">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8 }}
-        className="text-center mb-20"
+        className="text-center mb-12 md:mb-20"
       >
-        <h2 className="text-5xl md:text-7xl font-extrabold text-[#1D2233] mb-4" style={{ fontFamily: 'Instrument Serif, serif' }}>
+        <h2 className="text-4xl md:text-7xl font-extrabold text-[#1D2233] mb-4" style={{ fontFamily: 'Instrument Serif, serif' }}>
           Platform Features
         </h2>
         <motion.div 
@@ -57,20 +78,20 @@ function FeaturesSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="h-1 bg-gradient-to-r from-transparent via-[#78a0ff] to-transparent mx-auto mt-4 rounded-full"
         />
-        <p className="text-[#4e4e4e] text-lg max-w-2xl mx-auto mt-6">
+        <p className="text-[#4e4e4e] text-base md:text-lg max-w-2xl mx-auto mt-6 px-4">
           Powered by Welliptic MCP and multi-agent AI architecture
         </p>
       </motion.div>
 
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-16">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
           {/* Orbital Visualization */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative w-full max-w-lg aspect-square"
+            className="relative w-full max-w-[280px] sm:max-w-[350px] md:max-w-[450px] lg:max-w-lg aspect-square"
           >
             {/* Orbital Container */}
             <div className="relative w-full h-full">
@@ -148,18 +169,19 @@ function FeaturesSection() {
                     setActiveFeature(null)
                     setHoveredFeature(null)
                   }}
+                  onClick={() => setActiveFeature(!activeFeature)}
                   className="relative group"
                 >
                   {/* Icon Container */}
                   <div 
-                    className="relative z-10 p-10 rounded-3xl transition-all duration-500 bg-white border-2 border-[#78a0ff]/30"
+                    className="relative z-10 p-6 sm:p-8 lg:p-10 rounded-2xl lg:rounded-3xl transition-all duration-500 bg-white border-2 border-[#78a0ff]/30"
                     style={{
                       transform: isActive ? 'scale(1.15) rotate(5deg)' : 'scale(1) rotate(0deg)',
                       boxShadow: isActive ? '0 20px 60px rgba(120,160,255,0.3)' : '0 10px 30px rgba(120,160,255,0.15)'
                     }}
                   >
                     <Zap 
-                      className="w-20 h-20 transition-all duration-500 text-[#78a0ff]"
+                      className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 transition-all duration-500 text-[#78a0ff]"
                       style={{
                         filter: isActive ? 'drop-shadow(0 0 12px #78a0ff)' : 'drop-shadow(0 0 6px #78a0ff)'
                       }}
@@ -168,7 +190,7 @@ function FeaturesSection() {
 
                   {/* Pulsing Rings */}
                   <div 
-                    className="absolute inset-0 rounded-3xl bg-[#78a0ff] transition-opacity duration-500"
+                    className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-[#78a0ff] transition-opacity duration-500"
                     style={{
                       opacity: isActive ? 0.15 : 0.08,
                       animation: 'gentlePulse 3s ease-in-out infinite'
@@ -177,7 +199,7 @@ function FeaturesSection() {
 
                   {/* Glow Effect */}
                   <div 
-                    className="absolute inset-0 rounded-3xl blur-2xl bg-[#78a0ff] transition-opacity duration-500"
+                    className="absolute inset-0 rounded-2xl lg:rounded-3xl blur-2xl bg-[#78a0ff] transition-opacity duration-500"
                     style={{
                       opacity: isActive ? 0.25 : 0.12
                     }}
@@ -205,11 +227,15 @@ function FeaturesSection() {
                         setHoveredFeature(index)
                       }}
                       onMouseLeave={() => setHoveredFeature(null)}
+                      onClick={() => {
+                        setActiveFeature(true)
+                        setHoveredFeature(index)
+                      }}
                       className="relative group/feature cursor-pointer"
                     >
                       {/* Feature Node */}
                       <div 
-                        className="relative z-10 px-5 py-3 rounded-xl font-semibold text-sm whitespace-nowrap transition-all duration-300"
+                        className="relative z-10 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-5 lg:py-3 rounded-lg lg:rounded-xl font-semibold text-[10px] sm:text-xs lg:text-sm whitespace-nowrap transition-all duration-300"
                         style={{
                           backgroundColor: isHovered ? '#78a0ff' : 'rgba(120,160,255,0.1)',
                           color: isHovered ? 'white' : '#1D2233',
@@ -223,7 +249,7 @@ function FeaturesSection() {
 
                       {/* Feature Glow */}
                       <div 
-                        className="absolute inset-0 rounded-xl blur-lg bg-[#78a0ff] transition-opacity duration-300"
+                        className="absolute inset-0 rounded-lg lg:rounded-xl blur-lg bg-[#78a0ff] transition-opacity duration-300"
                         style={{
                           opacity: isHovered ? 0.4 : 0.15
                         }}
@@ -232,7 +258,7 @@ function FeaturesSection() {
                       {/* Orbiting Mini Particle */}
                       {isHovered && (
                         <div 
-                          className="absolute w-2 h-2 rounded-full bg-[#78a0ff]"
+                          className="absolute w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-[#78a0ff]"
                           style={{
                             top: '50%',
                             left: '50%',
@@ -256,11 +282,11 @@ function FeaturesSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="flex-1 max-w-xl"
           >
-            <h3 className="text-3xl font-bold text-[#1D2233] mb-8">
+            <h3 className="text-2xl md:text-3xl font-bold text-[#1D2233] mb-6 md:mb-8 text-center lg:text-left">
               Why Choose Our Platform?
             </h3>
             
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {[
                 { icon: Shield, title: "Secure & Compliant", desc: "Bank-grade encryption with full regulatory compliance" },
                 { icon: TrendingUp, title: "Higher Approval Rates", desc: "AI-powered assessment considers more data points" },
@@ -277,12 +303,12 @@ function FeaturesSection() {
                     transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     className="flex gap-4 items-start group hover:translate-x-2 transition-transform duration-300"
                   >
-                    <div className="p-3 rounded-xl bg-[#78a0ff]/10 group-hover:bg-[#78a0ff]/20 transition-colors duration-300">
-                      <Icon className="w-6 h-6 text-[#78a0ff]" />
+                    <div className="p-3 rounded-xl bg-[#78a0ff]/10 group-hover:bg-[#78a0ff]/20 transition-colors duration-300 flex-shrink-0">
+                      <Icon className="w-5 h-5 md:w-6 md:h-6 text-[#78a0ff]" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-[#1D2233] mb-1">{item.title}</h4>
-                      <p className="text-[#4e4e4e] text-sm">{item.desc}</p>
+                      <h4 className="font-bold text-[#1D2233] mb-1 text-sm md:text-base">{item.title}</h4>
+                      <p className="text-[#4e4e4e] text-xs md:text-sm">{item.desc}</p>
                     </div>
                   </motion.div>
                 )
@@ -294,11 +320,11 @@ function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 1 }}
-              className="mt-8 group/btn relative px-8 py-4 rounded-xl font-bold text-white overflow-hidden transition-all duration-500 bg-[#78a0ff] hover:shadow-[0_10px_30px_rgba(120,160,255,0.4)]"
+              className="mt-6 md:mt-8 w-full lg:w-auto group/btn relative px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-sm md:text-base text-white overflow-hidden transition-all duration-500 bg-[#78a0ff] hover:shadow-[0_10px_30px_rgba(120,160,255,0.4)]"
             >
               <span className="relative z-10 flex items-center gap-2 justify-center">
                 Explore Features
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </span>
               <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
             </motion.button>

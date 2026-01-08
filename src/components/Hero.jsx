@@ -35,16 +35,18 @@ function Hero() {
   return (
     <div
       className="
-        h-[110vh] w-full rounded-b-2xl
+        min-h-screen md:h-[110vh] w-full rounded-b-2xl md:rounded-b-3xl
         bg-[#010514]
-        flex flex-col items-start justify-center gap-8 pl-12
+        flex flex-col items-center md:items-start justify-center 
+        gap-6 md:gap-8
+        px-6 md:pl-12 md:pr-0
+        py-12 md:py-0
         relative overflow-hidden
         before:absolute before:inset-0
         before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)]
         before:bg-[size:40px_40px]
         before:opacity-40
         before:pointer-events-none
-        rounded-b-3xl
         shadow-2xl shadow-black
       "
     >
@@ -52,7 +54,14 @@ function Hero() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="text-7xl text-[#f2f4f8] font-extrabold relative z-10 drop-shadow-[0_4px_20px_rgba(120,160,255,0.3)]"
+        className="
+          text-4xl sm:text-5xl md:text-7xl
+          text-[#f2f4f8] font-extrabold 
+          relative z-10 
+          drop-shadow-[0_4px_20px_rgba(120,160,255,0.3)]
+          text-center md:text-left
+          leading-tight
+        "
       >
         Turning India's Digital Income -
         <br />
@@ -63,7 +72,13 @@ function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-        className="relative z-10 text-2xl text-[#a0b0d0] font-medium drop-shadow-[0_2px_10px_rgba(120,160,255,0.2)]"
+        className="
+          relative z-10 
+          text-lg sm:text-xl md:text-2xl
+          text-[#a0b0d0] font-medium 
+          drop-shadow-[0_2px_10px_rgba(120,160,255,0.2)]
+          text-center md:text-left
+        "
       >
         Onestop Destination For Your - <span className="text-[#78a0ff] font-semibold">{displayedText}<span className="animate-pulse">|</span></span>
       </motion.div>

@@ -24,7 +24,7 @@ export default function Home() {
       <Hero/>
       <AboutUs/>
       <HowItWorks/>
-      <WalletConnectBtn />
+      {/* <WalletConnectBtn /> */}
       <FeaturesSection/>
       
     </div>

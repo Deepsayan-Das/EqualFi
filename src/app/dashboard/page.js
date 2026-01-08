@@ -1,37 +1,55 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 import GaugeComponent from 'react-gauge-component'
-import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCircle, ShieldCheck, ArrowUpRight, ExternalLink, AlertTriangle, Cpu } from 'lucide-react'
-import { CursorFollower } from '@/components/ui/CustomCursor'
-import { CustomScrollbar } from '@/components/ui/CustomScrollbar'
-import { useLenis } from '@/hooks/useLenis'
+import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCircle, ShieldCheck, ArrowUpRight, ExternalLink, AlertTriangle, Cpu, Edit } from 'lucide-react'
 
 function Dashboard() {
+  const { user, isLoaded } = useUser()
+  const router = useRouter()
   const [creditScore, setCreditScore] = useState(0)
   const [isEvaluating, setIsEvaluating] = useState(false)
   const [showResults, setShowResults] = useState(false)
+  const [hasProfileData, setHasProfileData] = useState(false)
+  const [userData, setUserData] = useState(null)
 
-  // Hardcoded user data restored exactly
-  const userData = {
-    name: "Rahul Sharma",
-    email: "rahul.sharma@example.com",
-    persona: "Gig Worker",
-    occupation: "Freelancer",
-    incomeStreams: ["Upwork", "Fiverr", "Direct Clients"],
-    incomeConsistency: "High – Weekly",
-    monthlyIncome: "₹85,000",
-    lifeObligations: {
-      rent: "₹15,000",
-      emi: "₹8,000",
-      utilities: "₹3,500",
-      insurance: "₹2,000"
-    },
-    creditScore: 73,
-    creditRating: "Good",
-    approvalChance: 85
-  }
+  useEffect(() => {
+    if (!isLoaded) return
+    if (!user) {
+      router.push('/')
+      return
+    }
+
+    // Check if user has completed profile (you'll replace this with actual DB check)
+    const checkProfileCompletion = async () => {
+      try {
+        // TODO: Replace with actual API call to your database
+        // const response = await fetch(`/api/user-profile/${user.id}`)
+        // const data = await response.json()
+        
+        // For now, check localStorage or set to false by default
+        const profileCompleted = localStorage.getItem(`profile_${user.id}`)
+        
+        if (profileCompleted) {
+          const data = JSON.parse(profileCompleted)
+          setUserData(data)
+          setHasProfileData(true)
+        } else {
+          setHasProfileData(false)
+        }
+      } catch (error) {
+        console.error('Error checking profile:', error)
+        setHasProfileData(false)
+      }
+    }
+
+    checkProfileCompletion()
+  }, [isLoaded, user, router])
 
   const handleEvaluation = () => {
+    if (!hasProfileData) return
+    
     setIsEvaluating(true)
     setShowResults(false)
     setCreditScore(0)
@@ -39,15 +57,25 @@ function Dashboard() {
     setTimeout(() => {
       setIsEvaluating(false)
       setShowResults(true)
-      setCreditScore(userData.creditScore)
+      setCreditScore(userData?.creditScore || 73)
     }, 3000)
   }
-useLenis();
+
+  const handleUpdateProfile = () => {
+    router.push('/info')
+  }
+
+  if (!isLoaded || !user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
   return (
-    
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 lg:p-12 relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-[size:40px_40px] before:opacity-40 before:pointer-events-none">
-       <CustomScrollbar />
-      <CursorFollower />
+      
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 relative z-10">
         <div className="flex items-center justify-between mb-2">
@@ -55,10 +83,14 @@ useLenis();
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-sm text-slate-400">Welcome back,</p>
-              <p className="font-bold text-white">{userData.name}</p>
+              <p className="font-bold text-white">{user.firstName || user.emailAddresses[0].emailAddress}</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-blue-500/20">
-              <User className="w-6 h-6 text-white" />
+              {user.imageUrl ? (
+                <img src={user.imageUrl} alt="Profile" className="w-full h-full rounded-full" />
+              ) : (
+                <User className="w-6 h-6 text-white" />
+              )}
             </div>
           </div>
         </div>
@@ -71,118 +103,133 @@ useLenis();
         <div className="lg:col-span-1 space-y-6">
           {/* Personal Information */}
           <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20 shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <User className="w-5 h-5 text-blue-400" />
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <User className="w-5 h-5 text-blue-400" />
+                </div>
+                <h2 className="text-xl font-bold">Personal Information</h2>
               </div>
-              <h2 className="text-xl font-bold">Personal Information</h2>
+              <button
+                onClick={handleUpdateProfile}
+                className="p-2 hover:bg-blue-500/10 rounded-lg transition-colors"
+                title="Update Profile"
+              >
+                <Edit className="w-4 h-4 text-blue-400" />
+              </button>
             </div>
             <div className="space-y-4">
               <div>
                 <label className="text-sm text-slate-400 mb-1 block">Full Name</label>
-                <p className="text-white font-medium">{userData.name}</p>
+                <p className="text-white font-medium">
+                  {user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Not set'}
+                </p>
               </div>
               <div>
                 <label className="text-sm text-slate-400 mb-1 block">Email</label>
-                <p className="text-white font-medium">{userData.email}</p>
+                <p className="text-white font-medium">{user.emailAddresses[0].emailAddress}</p>
               </div>
-              <div>
-                <label className="text-sm text-slate-400 mb-1 block">Persona</label>
-                <div className="flex gap-2 mt-2">
-                  {['Gig Worker', 'Student', 'Freelancer'].map((type) => (
-                    <button
-                      key={type}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                        userData.persona === type
-                          ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/40'
-                          : 'bg-slate-800 text-slate-400 border border-blue-500/20'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
+              {hasProfileData && userData?.persona && (
+                <div>
+                  <label className="text-sm text-slate-400 mb-1 block">Persona</label>
+                  <div className="flex gap-2 mt-2">
+                    <span className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-500 text-white shadow-lg shadow-blue-500/40">
+                      {userData.persona}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
           {/* Income Information */}
-          <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20 shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <DollarSign className="w-5 h-5 text-blue-400" />
+          {hasProfileData && userData ? (
+            <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20 shadow-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <DollarSign className="w-5 h-5 text-blue-400" />
+                </div>
+                <h2 className="text-xl font-bold">Income Streams</h2>
               </div>
-              <h2 className="text-xl font-bold">Income Streams</h2>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm text-slate-400 mb-2 block">Active Platforms</label>
-                <div className="flex flex-wrap gap-2">
-                  {userData.incomeStreams.map((stream, idx) => (
-                    <span key={idx} className="px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-sm text-blue-400 font-medium">
-                      {stream}
-                    </span>
-                  ))}
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-slate-400 mb-2 block">Active Platforms</label>
+                  <div className="flex flex-wrap gap-2">
+                    {userData.incomeStreams?.map((stream, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-sm text-blue-400 font-medium">
+                        {stream}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm text-slate-400 mb-1 block">Income Consistency</label>
+                  <p className="text-white font-medium">{userData.incomeConsistency}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-slate-400 mb-1 block">Monthly Income</label>
+                  <p className="text-2xl font-bold text-blue-400 tracking-tight">{userData.monthlyIncome}</p>
                 </div>
               </div>
-              <div>
-                <label className="text-sm text-slate-400 mb-1 block">Income Consistency</label>
-                <div className="flex gap-2 mt-2">
-                  {['High – Weekly', 'Medium – Irregular', 'Low – Sporadic'].map((level) => (
-                    <button
-                      key={level}
-                      className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                        userData.incomeConsistency === level ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400 border border-blue-500/20'
-                      }`}
-                    >
-                      {level.split(' – ')[0]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-sm text-slate-400 mb-1 block">Monthly Income</label>
-                <p className="text-2xl font-bold text-blue-400 tracking-tight">{userData.monthlyIncome}</p>
-              </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-yellow-500/20 shadow-xl">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="w-6 h-6 text-yellow-400" />
+                <h2 className="text-xl font-bold text-yellow-400">Profile Incomplete</h2>
+              </div>
+              <p className="text-slate-300 mb-4">Complete your profile to unlock credit evaluation.</p>
+              <button
+                onClick={handleUpdateProfile}
+                className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold rounded-xl transition-all"
+              >
+                Complete Profile Now
+              </button>
+            </div>
+          )}
 
           {/* Life Obligations */}
-          <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20 shadow-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <Home className="w-5 h-5 text-blue-400" />
-              </div>
-              <h2 className="text-xl font-bold">Life Obligations</h2>
-            </div>
-            <div className="space-y-3">
-              {Object.entries(userData.lifeObligations).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-slate-400 capitalize">{key}</span>
-                  <span className="font-medium text-white">{value}</span>
+          {hasProfileData && userData?.lifeObligations && (
+            <div className="bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-blue-500/20 shadow-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <Home className="w-5 h-5 text-blue-400" />
                 </div>
-              ))}
-              <div className="pt-3 border-t border-blue-500/20 flex justify-between items-center">
-                <span className="text-white font-semibold">Total</span>
-                <span className="font-bold text-lg text-blue-400">
-                  ₹{Object.values(userData.lifeObligations).reduce((sum, val) => 
-                    sum + parseInt(val.replace(/[₹,]/g, '')), 0
-                  ).toLocaleString()}
-                </span>
+                <h2 className="text-xl font-bold">Life Obligations</h2>
+              </div>
+              <div className="space-y-3">
+                {Object.entries(userData.lifeObligations).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center">
+                    <span className="text-slate-400 capitalize">{key}</span>
+                    <span className="font-medium text-white">{value}</span>
+                  </div>
+                ))}
+                <div className="pt-3 border-t border-blue-500/20 flex justify-between items-center">
+                  <span className="text-white font-semibold">Total</span>
+                  <span className="font-bold text-lg text-blue-400">
+                    ₹{Object.values(userData.lifeObligations).reduce((sum, val) => 
+                      sum + parseInt(val.replace(/[₹,]/g, '')), 0
+                    ).toLocaleString()}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Evaluate Button */}
           <button
             onClick={handleEvaluation}
-            disabled={isEvaluating}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/40 disabled:opacity-50 flex items-center justify-center gap-2 border border-blue-400/20"
+            disabled={isEvaluating || !hasProfileData}
+            className={`w-full py-4 font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 border ${
+              hasProfileData
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-blue-500/40 border-blue-400/20'
+                : 'bg-slate-800 text-slate-500 cursor-not-allowed border-slate-700'
+            }`}
           >
             {isEvaluating ? (
               <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Evaluating...</>
             ) : (
-              <><Sparkles className="w-5 h-5" /> Run Credit Evaluation</>
+              <><Sparkles className="w-5 h-5" /> {hasProfileData ? 'Run Credit Evaluation' : 'Complete Profile First'}</>
             )}
           </button>
         </div>
@@ -193,7 +240,7 @@ useLenis();
           {/* Credit Score Gauge Card */}
           <div className="bg-slate-900/50 backdrop-blur-md p-8 rounded-2xl border border-blue-500/20 shadow-2xl">
             <h2 className="text-2xl font-bold mb-2 text-center">Credit Decision</h2>
-            <p className="text-center text-slate-400 text-sm mb-6">Based on Verified income, behaviour, and stability signals</p>
+            <p className="text-center text-slate-400 text-sm mb-6">Based on verified income, behaviour, and stability signals</p>
 
             <div className="w-full max-w-md mx-auto relative mb-2">
               <GaugeComponent
@@ -249,7 +296,7 @@ useLenis();
                     <div className="p-2 bg-green-500/20 rounded-lg"><CheckCircle className="w-5 h-5 text-green-400" /></div>
                     <span className="text-sm text-slate-400">Approval Chance</span>
                   </div>
-                  <p className="text-3xl font-black text-green-400">{userData.approvalChance}%</p>
+                  <p className="text-3xl font-black text-green-400">{userData?.approvalChance || 85}%</p>
                 </div>
                 <div className="bg-slate-900/50 p-6 rounded-xl border border-blue-500/20 shadow-lg">
                   <div className="flex items-center gap-3 mb-3">

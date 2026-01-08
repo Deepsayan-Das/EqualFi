@@ -1,30 +1,19 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Zap, TrendingUp, Lock, Check, ArrowRight, Sparkles } from 'lucide-react'
+import { Shield, Zap, TrendingUp, Lock, Check } from 'lucide-react'
 import { useSignIn, useSignUp } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+
 function LoginSignupPage() {
-    const router = useRouter()
-     const oauthLogin = (strategy) => {
-    if (!signIn || !strategy) return
+  const router = useRouter()
+  const { signIn, isLoaded: signInLoaded } = useSignIn()
+  const { signUp, isLoaded: signUpLoaded } = useSignUp()
 
-    signIn.authenticateWithRedirect({
-      strategy,
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/dashboard',
-    })
-  }
-
-
-
-const { signIn, isLoaded: signInLoaded } = useSignIn()
-const { signUp, isLoaded: signUpLoaded } = useSignUp()
-
-const [email, setEmail] = useState('')
-const [password, setPassword] = useState('')
-const [fullName, setFullName] = useState('')
-const [error, setError] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [error, setError] = useState('')
   const [isLogin, setIsLogin] = useState(true)
   const [activeFeature, setActiveFeature] = useState(0)
   const [particlePositions, setParticlePositions] = useState([])
@@ -55,15 +44,23 @@ const [error, setError] = useState('')
       color: "#78a0ff"
     }
   ]
+
   const OAUTH_PROVIDERS = {
-  Google: 'oauth_google',
-  GitHub: 'oauth_github',
-  Apple: 'oauth_apple',
-}
+    Google: 'oauth_google',
+    GitHub: 'oauth_github',
+    Apple: 'oauth_apple',
+  }
 
+  const oauthLogin = (strategy) => {
+    if (!signIn || !strategy) return
+    signIn.authenticateWithRedirect({
+      strategy,
+      redirectUrl: '/sso-callback',
+      redirectUrlComplete: '/dashboard',
+    })
+  }
 
-  // Generate random particles
-  useEffect(() => {
+  React.useEffect(() => {
     const particles = Array.from({ length: 30 }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -73,17 +70,55 @@ const [error, setError] = useState('')
     setParticlePositions(particles)
   }, [])
 
-  // Auto-rotate features
-  useEffect(() => {
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length)
     }, 4000)
     return () => clearInterval(interval)
   }, [])
 
+  const handleLogin = async () => {
+    if (!signInLoaded) return
+    setError('')
+
+    try {
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      })
+
+      if (result.status === 'complete') {
+        router.push('/dashboard')
+      }
+    } catch (err) {
+      setError(err.errors?.[0]?.message || 'Login failed')
+    }
+  }
+
+  const handleSignup = async () => {
+    if (!signUpLoaded) return
+    setError('')
+
+    try {
+      await signUp.create({
+        emailAddress: email,
+        password,
+        firstName: fullName.split(' ')[0],
+        lastName: fullName.split(' ').slice(1).join(' ') || '',
+      })
+
+      await signUp.prepareEmailAddressVerification({
+        strategy: 'email_code',
+      })
+
+      alert('Check your email for verification code')
+    } catch (err) {
+      setError(err.errors?.[0]?.message || 'Signup failed')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#010514] flex overflow-hidden relative pt-10">
-      {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -91,7 +126,6 @@ const [error, setError] = useState('')
           transition={{ duration: 0.6 }}
           className="w-full max-w-md"
         >
-          {/* Logo/Brand */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -104,7 +138,6 @@ const [error, setError] = useState('')
             <p className="text-[#a0b0d0] text-sm">Equal Access to Financial Opportunities</p>
           </motion.div>
 
-          {/* Toggle Tabs */}
           <div className="flex gap-2 mb-8 bg-[#0f1a2e] p-1 rounded-xl">
             <button
               onClick={() => setIsLogin(true)}
@@ -128,7 +161,12 @@ const [error, setError] = useState('')
             </button>
           </div>
 
-          {/* Form Container */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
+
           <AnimatePresence mode="wait">
             <motion.div
               key={isLogin ? 'login' : 'signup'}
@@ -139,27 +177,27 @@ const [error, setError] = useState('')
               className="bg-[#0f1a2e]/50 backdrop-blur-md p-8 rounded-2xl border border-[#78a0ff]/20"
             >
               {isLogin ? (
-                // Login Form
                 <div className="space-y-6">
                   <div>
                     <label className="block text-[#a0b0d0] mb-2 text-sm font-medium">Email</label>
                     <input
-                        type="email"
-                        placeholder="you@example.com"
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
-                        />
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
+                    />
                   </div>
 
                   <div>
                     <label className="block text-[#a0b0d0] mb-2 text-sm font-medium">Password</label>
                     <input
-                        type="password"
-                        placeholder="••••••••"
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
-                        />
-
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
+                    />
                   </div>
 
                   <div className="flex items-center justify-between text-sm">
@@ -171,24 +209,9 @@ const [error, setError] = useState('')
                   </div>
 
                   <button
-                  onClick={async () => {
-    if (!signInLoaded) return
-    setError('')
-
-    try {
-      const result = await signIn.create({
-        identifier: email,
-        password,
-      })
-
-      if (result.status === 'complete') {
-        router.push('/dashboard')
-      }
-    } catch (err) {
-      setError(err.errors?.[0]?.message || 'Login failed')
-    }
-  }}
-                   className="w-full py-4 bg-[#78a0ff] hover:bg-[#5c8be6] text-white font-bold rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(120,160,255,0.3)] hover:shadow-[0_6px_30px_rgba(120,160,255,0.5)] hover:translate-y-[-2px]">
+                    onClick={handleLogin}
+                    className="w-full py-4 bg-[#78a0ff] hover:bg-[#5c8be6] text-white font-bold rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(120,160,255,0.3)] hover:shadow-[0_6px_30px_rgba(120,160,255,0.5)] hover:translate-y-[-2px]"
+                  >
                     Sign In
                   </button>
 
@@ -204,7 +227,6 @@ const [error, setError] = useState('')
                   <div className="grid grid-cols-3 gap-3">
                     {['Google', 'GitHub', 'Apple'].map((provider) => (
                       <button
-
                         key={provider}
                         onClick={() => oauthLogin(OAUTH_PROVIDERS[provider])}
                         className="py-3 px-4 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-[#a0b0d0] hover:border-[#78a0ff] hover:text-white transition-all duration-300 text-sm font-medium"
@@ -215,13 +237,14 @@ const [error, setError] = useState('')
                   </div>
                 </div>
               ) : (
-                // Signup Form
                 <div className="space-y-6">
                   <div>
                     <label className="block text-[#a0b0d0] mb-2 text-sm font-medium">Full Name</label>
                     <input
                       type="text"
                       placeholder="John Doe"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
                     />
                   </div>
@@ -229,22 +252,23 @@ const [error, setError] = useState('')
                   <div>
                     <label className="block text-[#a0b0d0] mb-2 text-sm font-medium">Email</label>
                     <input
-                        type="email"
-                        placeholder="you@example.com"
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
-                        />
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
+                    />
                   </div>
 
                   <div>
                     <label className="block text-[#a0b0d0] mb-2 text-sm font-medium">Password</label>
                     <input
-                        type="password"
-                        placeholder="••••••••"
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
-                        />
-
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white placeholder-[#a0b0d0]/50 focus:border-[#78a0ff] focus:outline-none focus:ring-2 focus:ring-[#78a0ff]/20 transition-all"
+                    />
                   </div>
 
                   <label className="flex items-start text-[#a0b0d0] text-sm cursor-pointer">
@@ -253,26 +277,9 @@ const [error, setError] = useState('')
                   </label>
 
                   <button 
-                  onClick={async () => {
-    if (!signUpLoaded) return
-    setError('')
-
-    try {
-      await signUp.create({
-        emailAddress: email,
-        password,
-      })
-
-      await signUp.prepareEmailAddressVerification({
-        strategy: 'email_code',
-      })
-
-      alert('Check your email for verification')
-    } catch (err) {
-      setError(err.errors?.[0]?.message || 'Signup failed')
-    }
-  }}
-                  className="w-full py-4 bg-[#78a0ff] hover:bg-[#5c8be6] text-white font-bold rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(120,160,255,0.3)] hover:shadow-[0_6px_30px_rgba(120,160,255,0.5)] hover:translate-y-[-2px]">
+                    onClick={handleSignup}
+                    className="w-full py-4 bg-[#78a0ff] hover:bg-[#5c8be6] text-white font-bold rounded-xl transition-all duration-300 shadow-[0_4px_20px_rgba(120,160,255,0.3)] hover:shadow-[0_6px_30px_rgba(120,160,255,0.5)] hover:translate-y-[-2px]"
+                  >
                     Create Account
                   </button>
 
@@ -303,12 +310,9 @@ const [error, setError] = useState('')
         </motion.div>
       </div>
 
-      {/* Right Side - Animated Features */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center p-12 overflow-hidden">
-        {/* Background Grid */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(120,160,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-40" />
 
-        {/* Floating Particles */}
         {particlePositions.map((particle, i) => (
           <motion.div
             key={i}
@@ -331,9 +335,7 @@ const [error, setError] = useState('')
           />
         ))}
 
-        {/* Main Content */}
         <div className="relative z-10 max-w-lg">
-          {/* Rotating Feature Display */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFeature}
@@ -344,7 +346,6 @@ const [error, setError] = useState('')
               className="mb-12"
             >
               <div className="relative">
-                {/* Icon Container */}
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -369,7 +370,6 @@ const [error, setError] = useState('')
                   </div>
                 </motion.div>
 
-                {/* Feature Text */}
                 <h3 className="text-4xl font-bold text-white mb-4 text-center">
                   {features[activeFeature].title}
                 </h3>
@@ -380,7 +380,6 @@ const [error, setError] = useState('')
             </motion.div>
           </AnimatePresence>
 
-          {/* Feature Indicators */}
           <div className="flex justify-center gap-3 mb-12">
             {features.map((_, index) => (
               <button
@@ -393,7 +392,6 @@ const [error, setError] = useState('')
             ))}
           </div>
 
-          {/* Additional Benefits */}
           <div className="space-y-4">
             {[
               "No traditional credit history required",
@@ -417,7 +415,6 @@ const [error, setError] = useState('')
           </div>
         </div>
 
-        {/* Corner Decorations */}
         <div className="absolute top-10 right-10 w-40 h-40 border-2 border-[#78a0ff]/20 rounded-full" />
         <div className="absolute bottom-10 left-10 w-60 h-60 border-2 border-[#78a0ff]/20 rounded-full" />
       </div>
