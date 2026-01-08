@@ -3,6 +3,8 @@ import { motion } from "motion/react"
 import { ArrowRight } from 'lucide-react'
 import React from 'react'
 import { Roboto_Condensed } from 'next/font/google'
+import { useRouter } from 'next/navigation';
+
 
 export const robotoCondensed = Roboto_Condensed({
   subsets: ['latin'],
@@ -11,12 +13,13 @@ export const robotoCondensed = Roboto_Condensed({
 })
 
 function AnimatedButton(props) {
+    const router = useRouter();
   return (
     <motion.button
         className='bg-linear-to-br from-[#d4a017] from-50% to-[#ceae5e]  min-w-fit px-6 md:px-8 h-14 md:h-16 rounded-full flex items-center gap-3 md:gap-4 relative hover:scale-105 transition-all duration-200 cursor-pointer'
         whileHover="hover"
         initial="initial"
-        onClick={()=>{router.push('/contact')}}
+        onClick={()=>{router.push('/authn')}}
     >
         <motion.span
             className={` ${robotoCondensed.className} text-[#1D2233] text-lg md:text-2xl whitespace-nowrap font-bold`}

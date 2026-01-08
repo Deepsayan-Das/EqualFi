@@ -25,7 +25,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      signInUrl="/authn"
+      signUpUrl="/authn"
+      // Change these props to ensure the session is picked up
+      fallbackRedirectUrl="/dashboard"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+    >
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

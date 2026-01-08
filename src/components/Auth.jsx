@@ -9,6 +9,9 @@ function LoginSignupPage() {
   const router = useRouter()
   const { signIn, isLoaded: signInLoaded } = useSignIn()
   const { signUp, isLoaded: signUpLoaded } = useSignUp()
+  const [verificationCode, setVerificationCode] = useState('')
+const [needsVerification, setNeedsVerification] = useState(false)
+
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -51,14 +54,16 @@ function LoginSignupPage() {
     Apple: 'oauth_apple',
   }
 
-  const oauthLogin = (strategy) => {
-    if (!signIn || !strategy) return
-    signIn.authenticateWithRedirect({
-      strategy,
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/dashboard',
-    })
-  }
+const oauthLogin = (strategy) => {
+  if (!signIn || !strategy) return;
+  
+  signIn.authenticateWithRedirect({
+    strategy,
+    // This MUST match the folder structure we created in Step 2
+    redirectUrl: '/authn/sso-callback',
+    redirectUrlComplete: '/dashboard',
+  });
+};
 
   React.useEffect(() => {
     const particles = Array.from({ length: 30 }, () => ({
@@ -95,27 +100,47 @@ function LoginSignupPage() {
     }
   }
 
-  const handleSignup = async () => {
-    if (!signUpLoaded) return
-    setError('')
+const handleSignup = async () => {
+  if (!signUpLoaded) return
+  setError('')
 
-    try {
-      await signUp.create({
-        emailAddress: email,
-        password,
-        firstName: fullName.split(' ')[0],
-        lastName: fullName.split(' ').slice(1).join(' ') || '',
-      })
+  try {
+    await signUp.create({
+      emailAddress: email,
+      password,
+      firstName: fullName.split(' ')[0],
+      lastName: fullName.split(' ').slice(1).join(' ') || '',
+    })
 
-      await signUp.prepareEmailAddressVerification({
-        strategy: 'email_code',
-      })
+    await signUp.prepareEmailAddressVerification({
+      strategy: 'email_code',
+    })
 
-      alert('Check your email for verification code')
-    } catch (err) {
-      setError(err.errors?.[0]?.message || 'Signup failed')
-    }
+    setNeedsVerification(true)
+  } catch (err) {
+    setError(err.errors?.[0]?.message || 'Signup failed')
   }
+}
+const handleVerify = async () => {
+  if (!signUpLoaded) return
+
+  try {
+    const result = await signUp.attemptEmailAddressVerification({
+      code: verificationCode,
+    })
+
+    if (result.status === 'complete') {
+      await signUp.setActive({
+        session: result.createdSessionId,
+      })
+
+      router.push('/dashboard')
+    }
+  } catch (err) {
+    setError(err.errors?.[0]?.message || 'Verification failed')
+  }
+}
+
 
   return (
     <div className="min-h-screen bg-[#010514] flex overflow-hidden relative pt-10">
@@ -282,6 +307,29 @@ function LoginSignupPage() {
                   >
                     Create Account
                   </button>
+                  {needsVerification && (
+  <div className="mt-6 space-y-4">
+    <label className="block text-[#a0b0d0] text-sm font-medium">
+      Email Verification Code
+    </label>
+
+    <input
+      type="text"
+      placeholder="Enter the 6-digit code"
+      value={verificationCode}
+      onChange={(e) => setVerificationCode(e.target.value)}
+      className="w-full px-4 py-3 bg-[#010514] border border-[#78a0ff]/30 rounded-xl text-white tracking-widest text-center"
+    />
+
+    <button
+      onClick={handleVerify}
+      className="w-full py-3 bg-[#78a0ff] hover:bg-[#5c8be6] text-white font-bold rounded-xl transition-all"
+    >
+      Verify Email
+    </button>
+  </div>
+)}
+
 
                   <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">

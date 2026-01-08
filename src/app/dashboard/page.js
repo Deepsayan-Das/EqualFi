@@ -16,10 +16,10 @@ function Dashboard() {
 
   useEffect(() => {
     if (!isLoaded) return
-    if (!user) {
-      router.push('/')
-      return
-    }
+    // if (!user) {
+    //   router.push('/')
+    //   return
+    // }
 
     // Check if user has completed profile (you'll replace this with actual DB check)
     const checkProfileCompletion = async () => {
