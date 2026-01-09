@@ -47,8 +47,8 @@ function Dashboard() {
           if(Object.keys(userDataDB).length > 0) {
             const profileDatafromDB= {
               ...userDataDB, //!!! set creditScore field in DB !!!
-              creditRating: getCreditRating(userDataDB.creditScore),
-              approvalChance: Math.min(95,creditScore + 10),
+              creditRating: getCreditRating(parseInt(userDataDB.creditScore)),
+              approvalChance: Math.min(95,parseInt(userDataDB.creditScore) + 10),
               incomeStreams: userDataDB.incomeSource.split(',').map(s => s.trim()),
               lifeObligations: {
                 rent: userDataDB.rent ? `₹${userDataDB.rent}` : '₹0',
@@ -91,7 +91,7 @@ function Dashboard() {
     setTimeout(() => {
       setIsEvaluating(false)
       setShowResults(true)
-      setCreditScore(userData?.creditScore || 73)
+      setCreditScore(parseInt(userData?.creditScore) || 0)
     }, 3000)
   }
 

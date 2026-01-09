@@ -94,11 +94,14 @@ const Info = () => {
         String(value) // Ensure we only send strings to the contract
       ]);
 
+      
+
       await db('insert_record', {
         table: 'user_profiles_equalfi',
         key: user.id,
         fields:[
-          ...formFieldsAsArray
+          ...formFieldsAsArray,
+          ['creditScore', String(creditScore)],
         ]
       })
 
@@ -137,12 +140,12 @@ const Info = () => {
       
       // 2. Return result DIRECTLY (it is a number, not an object)
       // If result is null/undefined, default to a safe score like 300
-      return typeof result === 'number' ? result : 300;
+      return typeof result === 'number' ? result : 0;
 
     } catch (error) {
       console.error("Credit Score Calculation Failed:", error);
       // 3. Return a fallback score so the app doesn't crash
-      return 300; 
+      return 0; 
     }
   }
 
