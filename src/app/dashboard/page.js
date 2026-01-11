@@ -7,6 +7,14 @@ import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCir
 import { db } from '@/lib/weilliptic/api'
 import { SignOutButton } from '@clerk/nextjs'
 import { LogOut, User as UserIcon } from 'lucide-react'
+import Image from "next/image";
+ const metadata = {
+  title: "EqualFi||Your Complete Credit Profile",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 function Dashboard() {
   const { user, isLoaded } = useUser()
@@ -104,14 +112,14 @@ function Dashboard() {
 
   if (!isLoaded || !user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 lg:p-12 relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-[size:40px_40px] before:opacity-40 before:pointer-events-none">
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 lg:p-12 relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
       
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 relative z-10">
@@ -169,10 +177,12 @@ function Dashboard() {
   </div>
 
   {/* Right: Avatar */}
-  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-blue-500/20">
+  <div className="w-12 h-12 rounded-full bg-Linear-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-blue-500/20">
     {user.imageUrl ? (
-      <img
+      <Image
         src={user.imageUrl}
+        width={40}
+        height={40}
         alt="User profile picture"
         className="w-full h-full rounded-full object-cover"
       />
@@ -314,7 +324,7 @@ function Dashboard() {
             disabled={isEvaluating || !hasProfileData}
             className={`w-full py-4 font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 border ${
               hasProfileData
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-blue-500/40 border-blue-400/20'
+                ? 'bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-blue-500/40 border-blue-400/20'
                 : 'bg-slate-800 text-slate-500 cursor-not-allowed border-slate-700'
             }`}
           >

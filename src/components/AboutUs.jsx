@@ -27,7 +27,7 @@ function AboutUs() {
             whileInView={{ width: '60%' }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-            className='h-1 bg-gradient-to-r from-transparent via-[#78a0ff] to-transparent mt-4 rounded-full'
+            className='h-1 bg-linear-to-r from-transparent via-[#78a0ff] to-transparent mt-4 rounded-full'
           />
         </motion.div>
 
@@ -50,7 +50,7 @@ function AboutUs() {
                   whileInView={{ opacity: 1, scaleY: 1 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
-                  className='hidden md:block h-[50%] w-[2px] bg-gradient-to-b from-transparent via-[#78a0ff] to-transparent mx-8 rounded-full'
+                  className='hidden md:block h-[50%] w-0.5 bg-linear-to-b from-transparent via-[#78a0ff] to-transparent mx-8 rounded-full'
                 />
 
                 {/* Decorative elements for mobile instead of image */}
@@ -62,10 +62,10 @@ function AboutUs() {
                   className='md:hidden flex flex-col items-center gap-4 my-6'
                 >
                   <div className='flex gap-3'>
-                    <div className='w-16 h-16 rounded-full bg-gradient-to-br from-[#78a0ff] to-[#4a7fdd] shadow-lg'></div>
-                    <div className='w-16 h-16 rounded-full bg-gradient-to-br from-[#4a7fdd] to-[#78a0ff] shadow-lg'></div>
+                    <div className='w-16 h-16 rounded-full bg-linear-to-br from-[#78a0ff] to-[#4a7fdd] shadow-lg'></div>
+                    <div className='w-16 h-16 rounded-full bg-linear-to-br from-[#4a7fdd] to-[#78a0ff] shadow-lg'></div>
                   </div>
-                  <div className='w-24 h-1 bg-gradient-to-r from-[#78a0ff] via-[#4a7fdd] to-[#78a0ff] rounded-full'></div>
+                  <div className='w-24 h-1 bg-linear-to-r from-[#78a0ff] via-[#4a7fdd] to-[#78a0ff] rounded-full'></div>
                 </motion.div>
 
                 {/* Image for desktop */}

@@ -76,7 +76,7 @@ const isActive = activeFeature !== null
           whileInView={{ width: '15%' }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="h-1 bg-gradient-to-r from-transparent via-[#78a0ff] to-transparent mx-auto mt-4 rounded-full"
+          className="h-1 bg-linear-to-r from-transparent via-[#78a0ff] to-transparent mx-auto mt-4 rounded-full"
         />
         <p className="text-[#4e4e4e] text-base md:text-lg max-w-2xl mx-auto mt-6 px-4">
           Powered by Welliptic MCP and multi-agent AI architecture

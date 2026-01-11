@@ -6,6 +6,14 @@ import { Sparkles, ShieldCheck, Wallet, Landmark, Activity, AlertCircle, Chevron
 import { db } from '@/lib/weilliptic/api'
 import { credit } from '@/lib/weilliptic/creditApi'
 
+const metadata = {
+  title: "EqualFi||Complete Your Profile",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 const Info = () => {
   const { user, isLoaded } = useUser()
   const router = useRouter()
@@ -175,7 +183,7 @@ const Info = () => {
     <div className="min-h-screen bg-[#020617] text-white p-4 lg:p-12 relative overflow-hidden 
       before:absolute before:inset-0 
       before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] 
-      before:bg-[size:40px_40px] before:opacity-40 before:pointer-events-none">
+      before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
       
       <div className="max-w-2xl mx-auto relative z-10">
         <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 lg:p-10">
@@ -283,7 +291,7 @@ const Info = () => {
                   type="date" 
                   value={formData.evaluationDate}
                   onChange={(e) => handleInputChange('evaluationDate', e.target.value)}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blue-500/50 transition-all [color-scheme:dark]"
+                  className="w-full bg-slate-800/50 border border-white/10 rounded-xl p-3 text-slate-200 focus:outline-none focus:border-blue-500/50 transition-all scheme-dark"
                 />
               </div>
             </section>

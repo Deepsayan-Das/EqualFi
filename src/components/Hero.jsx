@@ -44,7 +44,7 @@ function Hero() {
         relative overflow-hidden
         before:absolute before:inset-0
         before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)]
-        before:bg-[size:40px_40px]
+        before:bg-size-[40px_40px]
         before:opacity-40
         before:pointer-events-none
         shadow-2xl shadow-black
@@ -63,9 +63,9 @@ function Hero() {
           leading-tight
         "
       >
-        Turning India's Digital Income -
+        {`Turning India's Digital Income`}
         <br />
-        Into Trusted Credit
+        {`Into Trusted Credit`}
       </motion.h1>
 
       <motion.div 

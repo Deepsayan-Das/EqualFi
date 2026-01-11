@@ -4,9 +4,9 @@ import { motion } from 'framer-motion'
 
 function HowItWorks() {
   return (
-    <div id='how-it-works' className='relative bg-gradient-to-b min-h-screen md:h-[175vh] from-[#010514] to-[#0a1128] flex flex-col justify-center items-center overflow-hidden w-full rounded-3xl mt-10 shadow-2xl shadow-black z-20 py-16 md:py-0'>
+    <div id='how-it-works' className='relative bg-linear-to-b min-h-screen md:h-[175vh] from-[#010514] to-[#0a1128] flex flex-col justify-center items-center overflow-hidden w-full rounded-3xl mt-10 shadow-2xl shadow-black z-20 py-16 md:py-0'>
       {/* Background Grid Pattern */}
-      <div className='absolute inset-0 bg-[linear-gradient(to_right,rgba(120,160,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none'></div>
+      <div className='absolute inset-0 bg-[linear-gradient(to_right,rgba(120,160,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.05)_1px,transparent_1px)] bg-size-[40px_40px] opacity-40 pointer-events-none'></div>
 
       {/* Section Header */}
       <motion.div 
@@ -33,7 +33,7 @@ function HowItWorks() {
           whileInView={{ height: '100%' }}
           transition={{ duration: 2, ease: 'easeInOut' }}
           viewport={{ once: true, amount: 0.3 }}
-          className='hidden md:block absolute left-1/2 -translate-x-1/2 w-[3px] bg-gradient-to-b from-[#78a0ff] to-[#4d7fd9] rounded-full shadow-[0_0_20px_rgba(120,160,255,0.5)] origin-top'
+          className='hidden md:block absolute left-1/2 -translate-x-1/2 w-0.75 bg-linear-to-b from-[#78a0ff] to-[#4d7fd9] rounded-full shadow-[0_0_20px_rgba(120,160,255,0.5)] origin-top'
         ></motion.div>
 
         {/* Step Items */}
@@ -79,7 +79,7 @@ function HowItWorks() {
                 <h3 className='text-[#78a0ff] font-black text-lg md:text-xl'>Step 2 — AI Credit Assessment</h3>
               </div>
               <p className='text-[#a0b0d0] text-sm md:text-base leading-relaxed'>
-                Our intelligent agents process your data through Welliptic's MCP framework, evaluating creditworthiness based on digital income patterns, transaction consistency, and earning trends.
+                {`Our intelligent agents process your data through Welliptic's MCP framework, evaluating creditworthiness based on digital income patterns, transaction consistency, and earning trends.`}
               </p>
             </div>
             <motion.div 
