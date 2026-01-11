@@ -59,7 +59,7 @@ const isActive = activeFeature !== null
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#f2f4f8] py-12 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative w-full">
+    <div id='features' className="min-h-screen bg-[#f2f4f8] py-12 md:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative w-full">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}

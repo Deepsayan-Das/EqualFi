@@ -1,14 +1,18 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Lenis from '@studio-freight/lenis'
 
 export function useLenis() {
+  const lenisRef = useRef(null)
+
   useEffect(() => {
     const lenis = new Lenis({
       smoothWheel: true,
       smoothTouch: false,
       lerp: 0.1,
     })
+
+    lenisRef.current = lenis
 
     function raf(time) {
       lenis.raf(time)
@@ -19,6 +23,13 @@ export function useLenis() {
 
     return () => {
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [])
+
+  const scrollTo = (target) => {
+    lenisRef.current?.scrollTo(target)
+  }
+
+  return { scrollTo }
 }

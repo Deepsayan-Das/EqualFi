@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 const isPublicRoute = createRouteMatcher([
   '/authn(.*)', 
   '/', 
-  '/authn/sso-callback(.*)' // Critical: allow this to process
+  '/authn/sso-callback(.*)',
+  '/docs(.*)' // Critical: allow this to process
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

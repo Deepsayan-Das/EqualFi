@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 function HowItWorks() {
   return (
-    <div className='relative bg-gradient-to-b min-h-screen md:h-[175vh] from-[#010514] to-[#0a1128] flex flex-col justify-center items-center overflow-hidden w-full rounded-3xl mt-10 shadow-2xl shadow-black z-20 py-16 md:py-0'>
+    <div id='how-it-works' className='relative bg-gradient-to-b min-h-screen md:h-[175vh] from-[#010514] to-[#0a1128] flex flex-col justify-center items-center overflow-hidden w-full rounded-3xl mt-10 shadow-2xl shadow-black z-20 py-16 md:py-0'>
       {/* Background Grid Pattern */}
       <div className='absolute inset-0 bg-[linear-gradient(to_right,rgba(120,160,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none'></div>
 

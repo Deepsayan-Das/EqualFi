@@ -11,7 +11,7 @@ const instr = Instrument_Serif({
 
 function AboutUs() {
   return (
-    <div className='bg-[#f2f4f8] mt-[-10vh] min-h-screen md:h-[110vh] w-screen flex flex-col items-center justify-center py-20 md:py-0'>
+    <div id='about-us' className='bg-[#f2f4f8] mt-[-10vh] min-h-screen md:h-[110vh] w-screen flex flex-col items-center justify-center py-20 md:py-0'>
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import GaugeComponent from 'react-gauge-component'
 import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCircle, ShieldCheck, ArrowUpRight, ExternalLink, AlertTriangle, Cpu, Edit } from 'lucide-react'
 import { db } from '@/lib/weilliptic/api'
+import { SignOutButton } from '@clerk/nextjs'
+import { LogOut, User as UserIcon } from 'lucide-react'
 
 function Dashboard() {
   const { user, isLoaded } = useUser()
@@ -14,6 +16,12 @@ function Dashboard() {
   const [showResults, setShowResults] = useState(false)
   const [hasProfileData, setHasProfileData] = useState(false)
   const [userData, setUserData] = useState(null)
+    const getCreditRating = (score) => {
+    if (score >= 80) return 'Excellent'
+    if (score >= 65) return 'Good'
+    if (score >= 50) return 'Fair'
+    return 'Needs Improvement'
+  }
 
   useEffect(() => {
     if (!isLoaded) return
@@ -74,12 +82,7 @@ function Dashboard() {
     checkProfileCompletion()
   }, [isLoaded, user, router])
 
-  const getCreditRating = (score) => {
-    if (score >= 80) return 'Excellent'
-    if (score >= 65) return 'Good'
-    if (score >= 50) return 'Fair'
-    return 'Needs Improvement'
-  }
+
 
   const handleEvaluation = () => {
     if (!hasProfileData) return
@@ -114,19 +117,62 @@ function Dashboard() {
       <div className="max-w-7xl mx-auto mb-8 relative z-10">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-4xl font-black text-blue-400 tracking-tighter">EQUALFI</h1>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm text-slate-400">Welcome back,</p>
-              <p className="font-bold text-white">{user.firstName || user.emailAddresses[0].emailAddress}</p>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-blue-500/20">
-              {user.imageUrl ? (
-                <img src={user.imageUrl} alt="Profile" className="w-full h-full rounded-full" />
-              ) : (
-                <User className="w-6 h-6 text-white" />
-              )}
-            </div>
-          </div>
+          <div className="flex items-center gap-6">
+  {/* User Info */}
+  <div className="flex items-center gap-4">
+  {/* Left: User info + sign out */}
+  <div className="flex flex-col items-end">
+    <div className="text-right">
+      <p className="text-sm text-slate-400">Welcome back,</p>
+      <p className="font-bold text-white">
+        {user.firstName || user.emailAddresses[0].emailAddress}
+      </p>
+    </div>
+
+    <SignOutButton>
+      <button
+        type="button"
+        className="
+          mt-2
+          flex items-center gap-2
+          rounded-md px-3 py-1.5
+          text-xs font-medium
+          text-slate-300
+          bg-slate-800/60
+          border border-slate-700
+          hover:bg-red-500/10
+          hover:text-red-400
+          hover:border-red-500/40
+          transition-colors
+          focus:outline-none
+          focus:ring-2
+          focus:ring-red-500/40
+        "
+        aria-label="Sign out"
+      >
+        <LogOut className="w-4 h-4" />
+        Sign out
+      </button>
+    </SignOutButton>
+  </div>
+
+  {/* Right: Avatar */}
+  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center border border-blue-500/20">
+    {user.imageUrl ? (
+      <img
+        src={user.imageUrl}
+        alt="User profile picture"
+        className="w-full h-full rounded-full object-cover"
+      />
+    ) : (
+      <UserIcon className="w-6 h-6 text-white" />
+    )}
+  </div>
+</div>
+
+  
+</div>
+          
         </div>
         <p className="text-slate-400 text-lg font-medium">Credit Profile Evaluation Dashboard</p>
       </div>
