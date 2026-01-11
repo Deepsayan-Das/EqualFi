@@ -4,6 +4,7 @@ import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import GaugeComponent from 'react-gauge-component'
 import { User, DollarSign, Home, TrendingUp, Activity, Sparkles, Clock, CheckCircle, ShieldCheck, ArrowUpRight, ExternalLink, AlertTriangle, Cpu, Edit } from 'lucide-react'
+import { db } from '@/lib/weilliptic/api'
 
 function Dashboard() {
   const { user, isLoaded } = useUser()
@@ -30,14 +31,40 @@ function Dashboard() {
         
         // For now, check localStorage or set to false by default
         const profileCompleted = localStorage.getItem(`profile_${user.id}`)
-        
+
         if (profileCompleted) {
           const data = JSON.parse(profileCompleted)
           setUserData(data)
           setHasProfileData(true)
-        } else {
-          setHasProfileData(false)
+
+        }else {
+        
+          const rawRecords = await db('get_all_fields', {
+            table: 'user_profiles_equalfi',  // Your table name
+            key: user.id                     // The User ID or Wallet Address used as the Primary Key
+          });
+          const userDataDB = Object.fromEntries(rawRecords);
+          if(Object.keys(userDataDB).length > 0) {
+            const profileDatafromDB= {
+              ...userDataDB, //!!! set creditScore field in DB !!!
+              creditRating: getCreditRating(parseInt(userDataDB.creditScore)),
+              approvalChance: Math.min(95,parseInt(userDataDB.creditScore) + 10),
+              incomeStreams: userDataDB.incomeSource.split(',').map(s => s.trim()),
+              lifeObligations: {
+                rent: userDataDB.rent ? `₹${userDataDB.rent}` : '₹0',
+                emi: userDataDB.emi ? `₹${userDataDB.emi}` : '₹0',
+                utilities: userDataDB.utilities ? `₹${userDataDB.utilities}` : '₹0',
+                insurance: userDataDB.insurance ? `₹${userDataDB.insurance}` : '₹0'
+              }
+            }
+            setUserData(profileDatafromDB)
+            setHasProfileData(true)
+          }else {
+            setHasProfileData(false)
+          }
         }
+
+         
       } catch (error) {
         console.error('Error checking profile:', error)
         setHasProfileData(false)
@@ -46,6 +73,13 @@ function Dashboard() {
 
     checkProfileCompletion()
   }, [isLoaded, user, router])
+
+  const getCreditRating = (score) => {
+    if (score >= 80) return 'Excellent'
+    if (score >= 65) return 'Good'
+    if (score >= 50) return 'Fair'
+    return 'Needs Improvement'
+  }
 
   const handleEvaluation = () => {
     if (!hasProfileData) return
@@ -57,7 +91,7 @@ function Dashboard() {
     setTimeout(() => {
       setIsEvaluating(false)
       setShowResults(true)
-      setCreditScore(userData?.creditScore || 73)
+      setCreditScore(parseInt(userData?.creditScore) || 0)
     }, 3000)
   }
 

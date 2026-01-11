@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { Sparkles, ShieldCheck, Wallet, Landmark, Activity, AlertCircle, ChevronDown, ArrowLeft } from 'lucide-react'
+import { db } from '@/lib/weilliptic/api'
+import { credit } from '@/lib/weilliptic/creditApi'
 
 const Info = () => {
   const { user, isLoaded } = useUser()
@@ -63,7 +65,7 @@ const Info = () => {
 
     try {
       // Calculate credit score based on inputs
-      const creditScore = calculateCreditScore(formData)
+      const creditScore = await calculateCreditScore(formData)
       
       // Prepare data for storage
       const profileData = {
@@ -79,13 +81,36 @@ const Info = () => {
           insurance: formData.insurance ? `₹${formData.insurance}` : '₹0'
         }
       }
-
+      console.log(formData);
       // TODO: Replace with actual API call to your database
       // await fetch('/api/user-profile', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ userId: user.id, ...profileData })
       // })
+      //tablename: 'user_profiles_equalfi'
+
+
+      const allowedFields = [
+        'persona', 'bankAge', 'incomeSource', 'monthlyIncome', 
+        'incomeConsistency', 'evaluationDate', 'rent', 
+        'utilities', 'emi', 'insurance', 'missedPayments'
+      ];
+
+      const formFieldsAsArray = Object.entries(formData)
+        .filter(([key]) => allowedFields.includes(key))
+        .map(([key, value]) => [key, String(value)]);
+
+      
+
+      await db('insert_record', {
+        table: 'user_profiles_equalfi',
+        key: user.id,
+        fields:[
+          ...formFieldsAsArray,
+          ['creditScore', String(creditScore)],
+        ]
+      })
 
       // For now, save to localStorage
       localStorage.setItem(`profile_${user.id}`, JSON.stringify(profileData))
@@ -102,41 +127,34 @@ const Info = () => {
     }
   }
 
-  const calculateCreditScore = (data) => {
-    let score = 50 // Base score
+ const calculateCreditScore = async (data) => {
+    try { 
+      // 1. Parse inputs safely (fallback to 0 if empty)
+      const payload = {
+        account_age_months: parseInt(data.bankAge) || 0,
+        monthly_income_avg: parseFloat(data.monthlyIncome) || 0,
+        income_frequency: data.incomeConsistency,
+        monthly_rent: parseFloat(data.rent) || 0,
+        monthly_utilities: (parseFloat(data.utilities) || 0) + (parseFloat(data.emi) || 0) + (parseFloat(data.insurance) || 0),
+        missed_payments_count: parseInt(data.missedPayments) || 0
+      };
 
-    // Bank age factor (max 15 points)
-    const bankAge = parseInt(data.bankAge) || 0
-    score += Math.min(15, bankAge / 2)
+      console.log("Calculating score with:", payload);
 
-    // Income consistency factor (max 20 points)
-    if (data.incomeConsistency === 'High – Weekly') score += 20
-    else if (data.incomeConsistency === 'Medium – Irregular') score += 12
-    else if (data.incomeConsistency === 'Low – Sporadic') score += 5
+      const result = await credit('get_score', payload);
+      
+      console.log("Credit Score Result:", result);
+      
+      // 2. Return result DIRECTLY (it is a number, not an object)
+      // If result is null/undefined, default to a safe score like 300
+      return typeof result === 'number' ? result : 0;
 
-    // Monthly income factor (max 15 points)
-    const income = parseInt(data.monthlyIncome) || 0
-    if (income >= 100000) score += 15
-    else if (income >= 50000) score += 10
-    else if (income >= 25000) score += 6
-
-    // Missed payments penalty
-    const missed = parseInt(data.missedPayments) || 0
-    score -= missed * 5
-
-    // Obligations ratio
-    const totalObligations = (parseInt(data.rent) || 0) + 
-                            (parseInt(data.emi) || 0) + 
-                            (parseInt(data.utilities) || 0) + 
-                            (parseInt(data.insurance) || 0)
-    const obligationRatio = income > 0 ? totalObligations / income : 0
-    
-    if (obligationRatio < 0.3) score += 10
-    else if (obligationRatio < 0.5) score += 5
-    else if (obligationRatio > 0.7) score -= 10
-
-    return Math.max(20, Math.min(100, Math.round(score)))
-  }
+    } catch (error) {
+      console.error("Credit Score Calculation Failed:", error);
+      // 3. Return a fallback score so the app doesn't crash
+      return 0; 
+    }
+  }
 
   const getCreditRating = (score) => {
     if (score >= 80) return 'Excellent'
@@ -248,7 +266,7 @@ const Info = () => {
                   </div>
                   {isOpen.consistency && (
                     <div className="absolute z-50 w-full mt-2 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl">
-                      {['High – Weekly', 'Medium – Irregular', 'Low – Sporadic'].map((opt) => (
+                      {['High – Consistent', 'Medium – Variable', 'Low – Unpredictable'].map((opt) => (
                         <div 
                           key={opt}
                           onClick={() => selectOption('incomeConsistency', opt)}
