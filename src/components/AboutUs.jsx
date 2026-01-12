@@ -39,9 +39,9 @@ function AboutUs() {
                   transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
                   className='w-full md:w-[50%] flex items-center text-center md:text-left text-[#1D2233] font-medium text-base md:text-lg leading-7 md:leading-8 px-4'
                 >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum, ex. Sint assumenda recusandae aliquid cum facere voluptatibus praesentium dignissimos asperiores a, placeat dicta, consectetur, incidunt illum inventore impedit possimus iusto!
-                    Possimus labore nihil temporibus minima sunt neque, deleniti fuga commodi qui, assumenda a, odio reiciendis quae quod. Pariatur exercitationem laudantium eos hic itaque maxime eius, tempore amet similique maiores perferendis?
-                    Exercitationem eos architecto delectus doloribus earum illo cumque quam assumenda, dicta quia dolores iste reiciendis aperiam commodi sed excepturi dignissimos eveniet placeat voluptate! Aperiam omnis animi, culpa odit officia quidem.
+                    We’re building a new credit layer for India’s digital workforce. Our mission is to unlock fair, transparent credit access for gig workers, freelancers, and first-time earners who are excluded by traditional credit systems. 
+                    Powered by agentic AI on Icarus, MCP-based secure data orchestration, and blockchain-backed auditability via WeilChain, our platform converts real-world digital earnings into trustworthy, explainable credit decisions—without exposing sensitive personal data. 
+                    We believe the future of finance is privacy-first, behavior-driven, and verifiably fair.
                 </motion.div>
 
                 {/* Vertical divider - hidden on mobile */}
