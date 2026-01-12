@@ -17,6 +17,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 
+
 export default function Docs() {
   useLenis();
 
@@ -24,7 +25,7 @@ export default function Docs() {
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 text-white relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
       
       {/* Navbar Wrapper to ensure it sits above the background */}
-      <div className="relative z-50">
+      <div className="relative z-50 mb-5">
         <Navbar />
       </div>
 
@@ -33,11 +34,11 @@ export default function Docs() {
         
         {/* Header Section */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-20 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 text-xs font-bold uppercase tracking-widest mb-4">
+          {/* <div className="inline-flex items-center gap-2 px-4 py-20 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 text-xs font-bold uppercase tracking-widest mb-4">
             <Book className="w-3 h-3" /> Knowledge Base
-          </div>
+          </div> */}
           <h1 
-            className="text-4xl md:text-5xl font-black tracking-tighter mb-4"
+            className="text-4xl md:text-5xl font-black tracking-tighter mb-4 mt-9"
             style={{ 
               fontFamily: 'Orbitron, sans-serif',
               background: 'linear-gradient(180deg, #78a0ff 0%, #4d7fd9 50%, #2d5a8f 100%)',
@@ -46,7 +47,7 @@ export default function Docs() {
               textShadow: '0 0 80px rgba(120,160,255,0.5)',
             }}
           >
-            EqualFi Documentation
+            Documentation
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Technical resources for the decentralized credit intelligence platform.
@@ -64,12 +65,12 @@ export default function Docs() {
             <div className="space-y-4 text-slate-300 leading-relaxed">
               <p>
                 EqualFi is a cutting-edge financial intelligence platform designed to democratize credit access for India's digital workforce. 
-                We leverage <span className="text-blue-400 font-medium">agentic AI</span>, blockchain technology, and secure data orchestration to provide fair, transparent credit evaluations 
+                We leverage <span className="text-blue-400 font-medium">agentic AI</span>, <span className="text-blue-400 font-medium">blockchain technology</span>, and secure data orchestration to provide fair, transparent credit evaluations 
                 for gig workers, freelancers, and first-time earners who are often excluded by traditional banking systems.
               </p>
               <p>
                 Our platform converts real-world digital earnings into trustworthy, explainable credit decisions without compromising 
-                user privacy. Powered by Weilliptic's MCP (Multi-Chain Protocol) and WeilChain blockchain, EqualFi ensures 
+                user privacy. Powered by <span className="text-blue-400 font-medium">Weilliptic's MCP (Multi-Chain Protocol)</span> and <span className="text-blue-400 font-medium">WeilChain blockchain</span>, EqualFi ensures 
                 auditability and security while maintaining data privacy.
               </p>
             </div>
@@ -146,6 +147,60 @@ export default function Docs() {
             </div>
           </section>
 
+          {/* Flow Overview */}
+          <section id='flow-overview'>
+            <div className='flowPart'>
+            <h2 className="text-2xl font-bold mb-6 text-white pl-2 border-l-4 border-blue-500 ">Flow Overview</h2>
+            </div>
+            {/* <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">01.User submits credit profile via frontend</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">02.Backend triggers agentic workflow</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">03.MCP-1 ingests & structures data securely</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">04.MCP-2 performs multi-step reasoning</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">05.Decision + explanation generated</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-1">
+                <div className="text-white-400 font-bold mb-2">06.Hash committed to WeilChain</div>
+            </div>
+            <div className="p-4 bg-slate-950/50 rounded-lg border border-slate-800 mb-5">
+                <div className="text-white-400 font-bold mb-2">07.Result displayed to user & auditors</div>
+            </div> */}
+            <div className="grid gap-6">
+              {[
+                { title: "User submits credit profile via frontend"},
+                { title: "Backend triggers agentic workflow"},
+                { title: "MCP-1 ingests & structures data securely" },
+                { title: "MCP-2 performs multi-step reasoning" },
+                { title: "Decision + explanation generated" },
+                { title: "Hash committed to WeilChain" },
+                { title: "Result displayed to user & auditors" }
+              ].map((step, idx) => (
+                <div key={idx} className="flex gap-5 items-start bg-slate-900/30 p-4 rounded-xl border border-slate-800 hover:border-blue-500/30 transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold border border-blue-500/30">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-0">{step.title}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-2xl border border-slate-700 shadow-2xl mt-3">
+            <img className='flow border bg-slate-950 backdrop-blur-xl p-1 rounded-2xl border-slate-700 shadow-2xl'
+            src="/flow.png"
+            alt='flowchart'/>
+            </div>
+
+          </section>
+
           {/* API Reference */}
           <section id="api-reference">
             <div className="bg-slate-900/80 backdrop-blur-xl p-1 rounded-2xl border border-slate-700 shadow-2xl">
@@ -194,7 +249,7 @@ export default function Docs() {
                     <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-800">
                       <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-3">Available Methods</h4>
                       <div className="flex flex-wrap gap-2 font-mono text-xs">
-                         {['create_table', 'insert', 'update', 'query', 'list_tables'].map(method => (
+                         {['create_table', 'insert', 'update', 'remove_field', 'list_tables'].map(method => (
                            <span key={method} className="px-2 py-1 bg-slate-800 text-green-400 rounded border border-slate-700">{method}</span>
                          ))}
                       </div>
