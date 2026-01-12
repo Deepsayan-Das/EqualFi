@@ -20,7 +20,7 @@ function HowItWorks() {
           3 Simple Steps to Credit Access
         </h2>
         <p className='text-[#a0b0d0] mt-4 text-base md:text-lg font-medium'>
-          Leverage your digital income with AI-powered credit assessment through Welliptic MCP
+          Leverage your digital income with AI-powered credit assessment through Weilliptic MCP
         </p>
       </motion.div>
 
@@ -53,7 +53,7 @@ function HowItWorks() {
                 <h3 className='text-[#78a0ff] font-black text-lg md:text-xl'>Step 1 — Connect Your Digital Income</h3>
               </div>
               <p className='text-[#a0b0d0] text-sm md:text-base leading-relaxed'>
-                Link your freelance platforms, gig economy accounts, and digital payment histories. Our multi-agent system securely analyzes your income streams using Welliptic MCP.
+                Link your freelance platforms, gig economy accounts, and digital payment histories. Our multi-agent system securely analyzes your income streams using Weilliptic MCP.
               </p>
             </div>
             <motion.div 
@@ -79,7 +79,7 @@ function HowItWorks() {
                 <h3 className='text-[#78a0ff] font-black text-lg md:text-xl'>Step 2 — AI Credit Assessment</h3>
               </div>
               <p className='text-[#a0b0d0] text-sm md:text-base leading-relaxed'>
-                {`Our intelligent agents process your data through Welliptic's MCP framework, evaluating creditworthiness based on digital income patterns, transaction consistency, and earning trends.`}
+                {`Our intelligent agents process your data through Weilliptic's MCP framework , evaluating creditworthiness based on digital income patterns, transaction consistency, and earning trends.`}
               </p>
             </div>
             <motion.div 

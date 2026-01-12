@@ -72,19 +72,19 @@ function Footer() {
               <div className="p-2 rounded-lg bg-[#78a0ff]/10">
                 <Mail className="w-5 h-5 text-[#78a0ff]" />
               </div>
-              <span>contact@equalfi.com</span>
+              <span>contact.equalfi@gmail.com</span>
             </div>
             <div className="flex items-center gap-3 text-[#a0b0d0]">
               <div className="p-2 rounded-lg bg-[#78a0ff]/10">
                 <Phone className="w-5 h-5 text-[#78a0ff]" />
               </div>
-              <span>+91 (800) 123-4567</span>
+              <span>+91 8637329216 </span>
             </div>
             <div className="flex items-center gap-3 text-[#a0b0d0]">
               <div className="p-2 rounded-lg bg-[#78a0ff]/10">
                 <MapPin className="w-5 h-5 text-[#78a0ff]" />
               </div>
-              <span>Mumbai, India</span>
+              <span>Kolkata, India </span>
             </div>
           </motion.div>
 
@@ -160,7 +160,7 @@ function Footer() {
               transition={{ duration: 0.5, delay: 0.9 }}
               className="mt-8 text-[#a0b0d0]/60 text-sm"
             >
-              © 2026 EqualFi. All rights reserved. Powered by Welliptic MCP.
+              © 2026 EqualFi. All rights reserved. Powered by Weilliptic MCP.
             </motion.p>
           </motion.div>
         </div>
