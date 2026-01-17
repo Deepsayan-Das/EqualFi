@@ -23,6 +23,8 @@ export default function Docs() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 text-white relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
+      <CustomScrollbar/>
+            <CursorFollower/>
       
       {/* Navbar Wrapper to ensure it sits above the background */}
       <div className="relative z-50 mb-5">

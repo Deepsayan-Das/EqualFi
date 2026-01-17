@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Sparkles, ShieldCheck, Wallet, Landmark, Activity, AlertCircle, ChevronDown, ArrowLeft } from 'lucide-react'
 import { db } from '@/lib/weilliptic/api'
 import { credit } from '@/lib/weilliptic/creditApi'
+import { CustomScrollbar } from '@/components/ui/CustomScrollbar'
+import { CursorFollower } from '@/components/ui/CustomCursor'
 
 const metadata = {
   title: "EqualFi||Complete Your Profile",
@@ -184,6 +186,9 @@ const Info = () => {
       before:absolute before:inset-0 
       before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] 
       before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
+
+        <CustomScrollbar/>
+              <CursorFollower/>
       
       <div className="max-w-2xl mx-auto relative z-10">
         <div className="bg-slate-900/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl p-8 lg:p-10">

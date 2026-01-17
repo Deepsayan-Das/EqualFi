@@ -8,6 +8,9 @@ import { db } from '@/lib/weilliptic/api'
 import { SignOutButton } from '@clerk/nextjs'
 import { LogOut, User as UserIcon } from 'lucide-react'
 import Image from "next/image";
+import Navbar from '@/components/ui/Navbar'
+import { CustomScrollbar } from '@/components/ui/CustomScrollbar'
+import { CursorFollower } from '@/components/ui/CustomCursor'
  const metadata = {
   title: "EqualFi||Your Complete Credit Profile",
   robots: {
@@ -120,6 +123,8 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-blue-950 to-slate-900 text-white p-6 lg:p-12 relative overflow-hidden before:absolute before:inset-0 before:bg-[linear-gradient(to_right,rgba(120,160,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,160,255,0.07)_1px,transparent_1px)] before:bg-size-[40px_40px] before:opacity-40 before:pointer-events-none">
+      <CustomScrollbar/>
+      <CursorFollower/>
       
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 relative z-10">
@@ -398,7 +403,7 @@ function Dashboard() {
                     <div className="p-2 bg-green-500/20 rounded-lg"><CheckCircle className="w-5 h-5 text-green-400" /></div>
                     <span className="text-sm text-slate-400">Approval Chance</span>
                   </div>
-                  <p className="text-3xl font-black text-green-400">{userData?.approvalChance || 85}%</p>
+                  <p className="text-3xl font-black text-green-400">{Math.floor((userData?.approvalChances || 85) * 100) / 100}%</p>
                 </div>
                 <div className="bg-slate-900/50 p-6 rounded-xl border border-blue-500/20 shadow-lg">
                   <div className="flex items-center gap-3 mb-3">
