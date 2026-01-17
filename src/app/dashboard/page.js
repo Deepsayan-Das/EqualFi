@@ -429,7 +429,8 @@ function Dashboard() {
                   <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-semibold border border-white/5 transition-colors">
                     <ExternalLink className="w-4 h-4" /> View On-Chain Audit
                   </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-400 rounded-xl text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all">
+                  <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-400 rounded-xl text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-all"
+                    onClick={()=>{router.push('/improve')}}>
                     <ArrowUpRight className="w-4 h-4" /> Improve My Score
                   </button>
                 </div>
