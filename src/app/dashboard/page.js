@@ -403,7 +403,7 @@ function Dashboard() {
                     <div className="p-2 bg-green-500/20 rounded-lg"><CheckCircle className="w-5 h-5 text-green-400" /></div>
                     <span className="text-sm text-slate-400">Approval Chance</span>
                   </div>
-                  <p className="text-3xl font-black text-green-400">{Math.floor((userData?.approvalChances || 85) * 100) / 100}%</p>
+                  <p className="text-3xl font-black text-green-400">{Math.floor((userData?.approvalChance || 85) * 100) / 100}%</p>
                 </div>
                 <div className="bg-slate-900/50 p-6 rounded-xl border border-blue-500/20 shadow-lg">
                   <div className="flex items-center gap-3 mb-3">
